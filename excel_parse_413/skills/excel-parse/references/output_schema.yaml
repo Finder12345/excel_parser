@@ -1,0 +1,8 @@
+﻿AUTOSAR:
+  RequirementsData:
+    CommunicationStack:
+      Can: {}
+      GateWayConfiguration: {}
+      Lin: {}
+    Storage:
+      NvRamManager: []

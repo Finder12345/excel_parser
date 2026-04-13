@@ -1,0 +1,30 @@
+﻿error_patterns:
+  - pattern: "signal bit.*out of range|BitPosition.*invalid"
+    module: can_signal
+    fields: [BitPosition, BitSize]
+    action: reparse_field
+    hint: "检查是否十六进制/十进制转换错误"
+
+  - pattern: "invalid byte order|endianness"
+    module: can_signal
+    fields: [SignalEndianness]
+    action: reparse_field
+    hint: "检查枚举映射覆盖范围"
+
+  - pattern: "PDU.*not found|routing.*error"
+    module: can_routing
+    fields: [sourcePduName, destinationPduName]
+    action: reparse_row
+    hint: "可能需要重新识别路由表布局"
+
+  - pattern: "NVM.*block.*size|block length"
+    module: nvm
+    fields: [NvMNvBlockLength]
+    action: reparse_field
+
+module_metadata_paths:
+  can_signal: "AUTOSAR.RequirementsData.CommunicationStack.Can"
+  can_routing: "AUTOSAR.RequirementsData.CommunicationStack.GateWayConfiguration"
+  lin_signal: "AUTOSAR.RequirementsData.CommunicationStack.Lin"
+  lin_schedule: "AUTOSAR.RequirementsData.CommunicationStack.Lin"
+  nvm: "AUTOSAR.RequirementsData.Storage.NvRamManager"

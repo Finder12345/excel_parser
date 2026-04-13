@@ -1,0 +1,33 @@
+﻿sheet_patterns:
+  include: ["*路由*", "*Routing*", "*Gateway*", "*GW*"]
+  exclude: ["*LIN*", "*NVM*"]
+
+layout_template:
+  type: matrix
+  signal_info_region: "左侧字段区，包含源信号名/源PDU/目的PDU等"
+  matrix_region: "右侧矩阵区，交叉单元格表示路由关系"
+  channel_name_row: 2
+  identifiers:
+    source_marker: "S"
+    destination_marker: "D"
+    both_marker: "S/D"
+
+parameters:
+  - name: sourceSignalName
+    keywords: ["Source Signal", "源信号", "Signal Name"]
+  - name: sourcePduName
+    keywords: ["Source PDU", "源PDU"]
+  - name: sourcePduId
+    keywords: ["Source PDU ID", "源PDU ID"]
+  - name: destinationPduName
+    keywords: ["Destination PDU", "目标PDU"]
+  - name: destinationPduId
+    keywords: ["Destination PDU ID", "目标PDU ID"]
+  - name: routeType
+    keywords: ["Route Type", "路由类型"]
+
+enum_mappings:
+  routeType:
+    direct: ["direct", "直连", "point-to-point"]
+    gateway: ["gateway", "网关", "forward"]
+    broadcast: ["broadcast", "广播"]

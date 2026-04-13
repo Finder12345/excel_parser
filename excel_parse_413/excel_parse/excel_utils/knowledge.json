@@ -1,0 +1,644 @@
+{
+  "sheet_info": {
+    "can_routing": {
+      "sheet_name_key_words": [
+        "网关",
+        "路由",
+        "routing",
+        "Gateway"
+      ],
+      "sheet_description": [
+        "CAN路由表，一般包含'网关'、'路由'、'Routing'、'Gateway'关键词，大小写不敏感",
+        "表的内容为源PDU名称、源PDU ID、目标PDU名称、目标PDU ID、路由类型、是否为LLCE路由、通道名称信息行、表示源通道名称的字母、表示目标通道名称的字母、表示源和目标通道名称的字母"
+      ],
+      "fields": {
+        "dataContentStartRow": {
+          "mapping_name": [],
+          "description": [
+            "数据内容开始行"
+          ]
+        },
+        "sourceSignalName": {
+          "mapping_name": [
+            "Signal name",
+            "sig name",
+            "信号名称",
+            "srcSignalName"
+          ],
+          "description": [
+            "源信号名称"
+          ]
+        },
+        "sourcePduName": {
+          "mapping_name": [
+            "Src Message/PDU name",
+            "PDU name",
+            "srcPduName"
+          ],
+          "description": [
+            "源PDU名称"
+          ]
+        },
+        "sourcePduId": {
+          "mapping_name": [
+            "Receive CAN Container PduID(Hex)/ ETH Pdu ID (Hex)",
+            "srcPduId"
+          ],
+          "description": [
+            "源PDU ID"
+          ]
+        },
+        "destinationSignalName": {
+          "mapping_name": [
+            "Signal name",
+            "sig name",
+            "destSignalName"
+          ],
+          "description": [
+            "目标信号名称",
+            "destinationSignalName的别名是Name"
+          ]
+        },
+        "destinationPduName": {
+          "mapping_name": [
+            "Dest Message/PDU name",
+            "目标PDU名称",
+            "destPduName",
+            "PDU"
+          ],
+          "description": [
+            "目标PDU名称",
+            "路由表的destinationPduName应该对应PDU列"
+          ]
+        },
+        "destinationPduId": {
+          "mapping_name": [
+            "Transmit CAN Container PduID(Hex)/ ETH Pdu ID (Hex)",
+            "destPduId"
+          ],
+          "description": [
+            "目标PDU ID"
+          ]
+        },
+        "routingType": {
+          "mapping_name": [
+            "Routing Type",
+            "路由类型",
+            "routingType"
+          ],
+          "description": [
+            "路由类型"
+          ]
+        },
+        "isLLCE": {
+          "mapping_name": [
+            "HW-Accelerator",
+            "isLLCE"
+          ],
+          "description": [
+            "标识是否为LLCE路由"
+          ]
+        },
+        "sourceChannelIdentifier": {
+          "mapping_name": [
+            "S"
+          ],
+          "description": [
+            "表示源通道名称的字母 默认为S"
+          ]
+        },
+        "destinationChannelIdentifier": {
+          "mapping_name": [
+            "D"
+          ],
+          "description": [
+            "表示目标通道名称的字母 默认为D"
+          ]
+        },
+        "sourceDestinationChannelIdentifier": {
+          "mapping_name": [
+            "SD",
+            "S/D"
+          ],
+          "description": [
+            "表示源和目标通道名称的字母"
+          ]
+        }
+      }
+    },
+    "can_signal": {
+      "sheet_name_key_words": [
+        "Tx_",
+        "Rx_",
+        "DebugMessage",
+        "_CAN"
+      ],
+      "sheet_description": [
+        "CAN信号表，一般包含'Tx_'、'Rx_'、'DebugMessage'、'_CAN'前缀"
+      ],
+      "fields": {
+        "ShortName": {
+          "mapping_name": [
+            "Signal Name",
+            "信号名称",
+            "signalName"
+          ],
+          "description": [
+            "信号名称"
+          ]
+        },
+        "BitSize": {
+          "mapping_name": [],
+          "description": [
+            "信号长度"
+          ]
+        },
+        "BitPosition": {
+          "mapping_name": [],
+          "description": [
+            "起始位"
+          ]
+        },
+        "SignalType": {
+          "mapping_name": [],
+          "description": [
+            "信号数据类型"
+          ]
+        },
+        "SignalEndianness": {
+          "mapping_name": [],
+          "description": []
+        },
+        "SignalInitValue": {
+          "mapping_name": [],
+          "description": [
+            "信号长度的初始值"
+          ]
+        },
+        "SignalMinValue": {
+          "mapping_name": [],
+          "description": [
+            "信号最小值"
+          ]
+        },
+        "SignalMaxValue": {
+          "mapping_name": [],
+          "description": [
+            "信号最大值"
+          ]
+        },
+        "SignalDataInvalidValue": {
+          "mapping_name": [],
+          "description": [
+            "信号无效值"
+          ]
+        },
+        "TimeoutValue": {
+          "mapping_name": [],
+          "description": [
+            "信号截止时间"
+          ]
+        },
+        "TransferProperty": {
+          "mapping_name": [],
+          "description": []
+        },
+        "UpdateBitPosition": {
+          "mapping_name": [],
+          "description": []
+        },
+        "SystemTemplateSystemSignalRef": {
+          "mapping_name": [],
+          "description": []
+        },
+        "MsgName": {
+          "mapping_name": [],
+          "description": [
+            "报文名称"
+          ]
+        },
+        "MsgDelayTime": {
+          "mapping_name": [],
+          "description": []
+        },
+        "Offset": {
+          "mapping_name": [],
+          "description": [
+            "偏移"
+          ]
+        },
+        "MsgNrOfReption": {
+          "mapping_name": [],
+          "description": []
+        },
+        "MsgSendType": {
+          "mapping_name": [],
+          "description": [
+            "报文的发送类型/消息发送类型"
+          ]
+        },
+        "MsgId": {
+          "mapping_name": [],
+          "description": [
+            "报文ID"
+          ]
+        },
+        "MsgLength": {
+          "mapping_name": [],
+          "description": [
+            "报文长度"
+          ]
+        },
+        "MsgCycleTime": {
+          "mapping_name": [],
+          "description": [
+            "报文周期"
+          ]
+        },
+        "EcuName": {
+          "mapping_name": [],
+          "description": [
+            "ECU(或ecu)的名称"
+          ]
+        },
+        "MsgType": {
+          "mapping_name": [],
+          "description": [
+            "报文类型"
+          ]
+        },
+        "Remark": {
+          "mapping_name": [],
+          "description": [
+            "备注"
+          ]
+        }
+      }
+    },
+    "lin_signal": {
+      "sheet_name_key_words": [
+        "LIN",
+        "信号表",
+        "lin"
+      ],
+      "sheet_description": [
+        "LIN信号表，一般包含'LIN'关键词，但不包含'LIN Legend'、'调度'、'schedule'关键词"
+      ],
+      "fields": {
+        "EcuName": {
+          "mapping_name": [
+            "ECU (Tx)",
+            "ECU"
+          ],
+          "description": [
+            "ECU(或ecu)的名称"
+          ]
+        },
+        "FrameName": {
+          "mapping_name": [
+            "Frame Name"
+          ],
+          "description": [
+            "LIN信号名称"
+          ]
+        },
+        "LinId": {
+          "mapping_name": [
+            "LIN ID (hex)"
+          ],
+          "description": [
+            "LIN信号的ID"
+          ]
+        },
+        "ProtectedId": {
+          "mapping_name": [
+            "Protected ID (hex)"
+          ],
+          "description": [
+            "LIN信号的保护ID"
+          ]
+        },
+        "MsgSendType": {
+          "mapping_name": [
+            "Frame Send Type"
+          ],
+          "description": [
+            "报文的发送类型/消息发送类型"
+          ]
+        },
+        "FrameLength": {
+          "mapping_name": [
+            "Frame Length (bytes)"
+          ],
+          "description": [
+            "LIN信号帧长度"
+          ]
+        },
+        "FrameSendType": {
+          "mapping_name": [
+            "Frame Send Type"
+          ],
+          "description": [
+            "LIN信号帧发送类型"
+          ]
+        },
+        "FrameCycleTime": {
+          "mapping_name": [
+            "Frame Cycle Time (ms)"
+          ],
+          "description": [
+            "LIN信号报文周期"
+          ]
+        },
+        "ShortName": {
+          "mapping_name": [
+            "Signal Name"
+          ],
+          "description": [
+            "信号名称"
+          ]
+        },
+        "BitSize": {
+          "mapping_name": [
+            "Signal Length"
+          ],
+          "description": [
+            "信号长度"
+          ]
+        },
+        "BitPosition": {
+          "mapping_name": [
+            "Start Bit Position"
+          ],
+          "description": [
+            "start_bit"
+          ]
+        },
+        "SignalType": {
+          "mapping_name": [],
+          "description": [
+            "data_type"
+          ]
+        },
+        "SignalEndianness": {
+          "mapping_name": [],
+          "description": []
+        },
+        "SignalInitValue": {
+          "mapping_name": [],
+          "description": [
+            "信号长度的初始值"
+          ]
+        },
+        "SignalLength": {
+          "mapping_name": [
+            "Signal Length"
+          ],
+          "description": [
+            "信号长度"
+          ]
+        },
+        "SignalDataInvalidValue": {
+          "mapping_name": [],
+          "description": [
+            "信号无效值"
+          ]
+        },
+        "SignalMinValue": {
+          "mapping_name": [
+            "Signal Min Value (phys)"
+          ],
+          "description": [
+            "信号最小值"
+          ]
+        },
+        "SignalMaxValue": {
+          "mapping_name": [
+            "Signal Max Value (phys)"
+          ],
+          "description": [
+            "信号最大值"
+          ]
+        },
+        "SignalDefaultValue": {
+          "mapping_name": [
+            "Default Value (hex)"
+          ],
+          "description": [
+            "信号默认值"
+          ]
+        },
+        "TimeoutValue": {
+          "mapping_name": [
+            "Timeout Value (hex)"
+          ],
+          "description": [
+            "信号截止时间"
+          ]
+        },
+        "SignalValueDescription": {
+          "mapping_name": [
+            "Signal Value Description"
+          ],
+          "description": [
+            "信号值描述"
+          ]
+        },
+        "Remark": {
+          "mapping_name": [
+            "Remark"
+          ],
+          "description": [
+            "备注"
+          ]
+        }
+      }
+    },
+    "lin_schedule": {
+      "sheet_name_key_words": [
+        "调度",
+        "调度表",
+        "schedule"
+      ],
+      "sheet_description": [
+        "LIN信号的调度表"
+      ],
+      "fields": {
+        "dataContentStartRow": {
+          "mapping_name": [],
+          "description": [
+            "数据内容开始行"
+          ]
+        },
+        "frame_name": {
+          "mapping_name": [],
+          "description": "RLS_1 以及其他的"
+        },
+        "tans_time": {
+          "mapping_name": [],
+          "description": "tans_time"
+        }
+      }
+    },
+    "nvm_common": {
+      "sheet_name_key_words": [],
+      "sheet_description": [],
+      "fields": {
+        "NvMCompiledConfigId": {
+          "mapping_name": [],
+          "description": [
+            "标准配置项名：编译时生成的配置标识符，用于版本管理和跟踪。"
+          ]
+        },
+        "NvMDynamicConfiguration": {
+          "mapping_name": [],
+          "description": [
+            "标准配置项名：启用运行时动态配置NvM块的使能开关。"
+          ]
+        },
+        "NvMSizeImmediateJobQueue": {
+          "mapping_name": [],
+          "description": [
+            "标准配置项名：用于存储高优先级NvM作业（如写操作）的队列深度。"
+          ]
+        },
+        "NvMSizeStandardJobQueue": {
+          "mapping_name": [],
+          "description": [
+            "标准配置项名：用于存储普通优先级NvM作业（如读操作）的队列深度。"
+          ]
+        }
+      }
+    },
+    "nvm_block": {
+      "sheet_name_key_words": [
+        "存储",
+        "NVM",
+        "nvm"
+      ],
+      "sheet_description": [
+        "存储配置表，一般包含'存储'关键词，语言不限，语义匹配即可，大小写不敏感",
+        "存储就是nvm的别名"
+      ],
+      "fields": {
+        "Name": {
+          "mapping_name": [],
+          "description": [
+            "NVM名称"
+          ]
+        },
+        "BlockID": {
+          "mapping_name": [
+            "block_id",
+            "block_id_hex"
+          ],
+          "description": [
+            "NvM数据块的唯一数字标识符"
+          ]
+        },
+        "ISReadAll": {
+          "mapping_name": [],
+          "description": [
+            "上电初始化时，是否从NV中读取数据到RAM。"
+          ]
+        },
+        "ISWriteAll": {
+          "mapping_name": [],
+          "description": [
+            "下电或特定事件时，是否将RAM块数据写入NV。"
+          ]
+        },
+        "NvMBlockUseCrc": {
+          "mapping_name": [],
+          "description": [
+            "是否对该数据块使用CRC校验以保证数据的完整性。"
+          ]
+        },
+        "NvMBlockCrcType": {
+          "mapping_name": [],
+          "description": [
+            "选择CRC计算算法（如CRC8、CRC16、CRC32）的类型。"
+          ]
+        },
+        "IsWriteValidate": {
+          "mapping_name": [],
+          "description": [
+            "写入后是否立即读回验证，确保NV存储的写入成功。"
+          ]
+        },
+        "priority": {
+          "mapping_name": [],
+          "description": [
+            "定义此数据块在NvM作业队列中的处理优先级。"
+          ]
+        },
+        "ManagementTYPE": {
+          "mapping_name": [],
+          "description": [
+            "定义数据块的管理类型（如native、redundant、dataset）。"
+          ]
+        },
+        "size": {
+          "mapping_name": [],
+          "description": [
+            "该NvM数据块在非易失性存储和RAM缓存中所占的字节大小。"
+          ]
+        },
+        "MaxRewriteTimes": {
+          "mapping_name": [],
+          "description": [
+            "写NV过程中最大重试次数。"
+          ]
+        },
+        "MaxReadTimes": {
+          "mapping_name": [],
+          "description": [
+            "从NV读数据的最大尝试次数。"
+          ]
+        },
+        "RamBlcokAdd": {
+          "mapping_name": [],
+          "description": [
+            "关联的RAM缓存区地址指针。"
+          ]
+        },
+        "RomBlcokAdd": {
+          "mapping_name": [],
+          "description": [
+            "关联的ROM默认数据地址指针。"
+          ]
+        },
+        "NvMResistantToChangedSw": {
+          "mapping_name": [],
+          "description": [
+            "当新刷入的软件与ECU的NV中旧block的布局不一致时，是否跟随软件变更。"
+          ]
+        },
+        "SecurityLevel": {
+          "mapping_name": [],
+          "description": [
+            "根据ISO 26262定义的数据块所需的功能安全等级（ASIL）。"
+          ]
+        },
+        "WriteFrequency": {
+          "mapping_name": [],
+          "description": [
+            "预估的数据块写入频率，用于存储磨损均衡的参考。"
+          ]
+        },
+        "NvBridge": {
+          "mapping_name": [],
+          "description": [
+            "是否通过应用层代理读写该block。"
+          ]
+        },
+        "CallBack": {
+          "mapping_name": [],
+          "description": [
+            "相关联的回调函数。"
+          ]
+        }
+      }
+    }
+  }
+}

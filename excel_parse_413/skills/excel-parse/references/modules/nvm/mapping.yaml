@@ -1,0 +1,59 @@
+﻿sheet_patterns:
+  include: ["*NVM*", "*NvM*", "*存储*", "*NvRam*"]
+  exclude: ["*LIN*", "*Routing*", "*Gateway*"]
+
+zone_markers:
+  common_parameters:
+    keywords: ["NvMCommon", "BlockBaseNumber", "ConfigClass", "参数"]
+    expected_top_rows: 20
+  block_list:
+    header_keywords: ["Block Name", "Block ID", "Block Length", "ROM", "RAM", "CRC"]
+
+common_parameters:
+  - name: NvMBlockBaseNumber
+    keywords: ["BlockBaseNumber", "NvMBlockBaseNumber"]
+    format: int
+  - name: NvMConfigClass
+    keywords: ["ConfigClass", "NvMConfigClass"]
+    format: string
+
+parameters:
+  - name: NvMBlockName
+    level: block
+    required: true
+    format: string
+    keywords: ["Block Name", "NvMBlockName", "块名"]
+  - name: NvMBlockId
+    level: block
+    required: true
+    format: int
+    keywords: ["Block ID", "BlockId", "块ID"]
+  - name: NvMNvBlockLength
+    level: block
+    required: true
+    format: int
+    keywords: ["Block Length", "Nv Length", "长度"]
+  - name: NvMRamBlockDataAddress
+    level: block
+    required: false
+    format: string
+    keywords: ["RAM Address", "RamBlock", "RAM块地址"]
+  - name: NvMRomBlockDataAddress
+    level: block
+    required: false
+    format: string
+    keywords: ["ROM Address", "RomBlock", "ROM块地址"]
+  - name: NvMCalcRamBlockCrc
+    level: block
+    required: false
+    format: enum
+    keywords: ["Calc CRC", "CRC", "计算CRC"]
+
+enum_mappings:
+  NvMCalcRamBlockCrc:
+    true: ["true", "yes", "1", "是"]
+    false: ["false", "no", "0", "否"]
+
+validation_rules:
+  required_fields: ["NvMBlockName", "NvMBlockId", "NvMNvBlockLength"]
+  mapping_coverage_threshold: 0.8

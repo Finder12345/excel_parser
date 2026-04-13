@@ -1,0 +1,289 @@
+# LIN 信号字段映射配置
+# 机器可解析的配置文件，供 Agent 运行时加载映射规则
+
+module: lin_signal
+version: "2.0"
+description: "LIN 信号表解析配置 — 供 Agent 读取后自行执行解析流程"
+
+# ─── Sheet 识别规则 ───
+sheet_patterns:
+  include:
+    - "*LIN*"
+    - "*lin*"
+    - "*Lin*"
+    - "*信号表*"
+  exclude:
+    - "*调度*"
+    - "*Schedule*"
+    - "*schedule*"
+    - "*Legend*"
+    - "*变更*"
+    - "*履历*"
+
+# ─── 字段定义 ───
+# 每个 parameter 包含：
+#   name: AUTOSAR 标准字段名
+#   keywords: Excel 列标题的可能写法（中英文同义词，按优先级排列）
+#   format: 数据类型
+#   required: 是否必填
+#   default: 缺省值
+#   conversion: 转换方式
+#   validation: 校验规则
+#   level: "message" = 帧级字段 / "signal" = 信号级字段
+
+parameters:
+  # ─── 帧级字段（message level）───
+  - name: EcuName
+    keywords: ["ECU (Tx)", "ECU", "ECU Name", "Transmitter", "发送节点"]
+    format: string
+    required: false
+    level: message
+
+  - name: FrameName
+    keywords: ["Frame Name", "帧名称", "FrameName", "Frame", "报文名称"]
+    format: string
+    required: true
+    level: message
+    validation:
+      pattern: "^[A-Za-z_][A-Za-z0-9_]*$"
+      max_length: 128
+
+  - name: LinId
+    keywords: ["LIN ID (hex)", "LIN ID", "LinId", "Frame ID", "帧ID"]
+    format: hex
+    required: true
+    level: message
+    validation:
+      min: 0x00
+      max: 0x3F
+    conversion: "parse_hex"
+
+  - name: ProtectedId
+    keywords: ["Protected ID (hex)", "Protected ID", "ProtectedId", "PID"]
+    format: hex
+    required: false
+    level: message
+    conversion: "parse_hex"
+
+  - name: FrameLength
+    keywords: ["Frame Length (bytes)", "Frame Length", "帧长度", "DLC", "Length"]
+    format: int
+    required: false
+    default: 8
+    level: message
+    validation:
+      min: 1
+      max: 8
+    conversion: "int()"
+
+  - name: MsgSendType
+    keywords: ["Frame Send Type", "发送类型", "MsgSendType", "Send Type"]
+    format: enum
+    required: false
+    default: "Unconditional"
+    level: message
+
+  - name: FrameSendType
+    keywords: ["Frame Send Type", "FrameSendType"]
+    format: enum
+    required: false
+    default: "Unconditional"
+    level: message
+    alias_of: MsgSendType
+
+  - name: FrameCycleTime
+    keywords: ["Frame Cycle Time (ms)", "Frame Cycle Time", "Cycle Time", "周期"]
+    format: int
+    required: false
+    level: message
+    conversion: "int()"
+
+  # ─── 信号级字段（signal level）───
+  - name: ShortName
+    keywords: ["Signal Name", "信号名称", "SignalName", "Signal"]
+    format: string
+    required: true
+    level: signal
+    validation:
+      pattern: "^[A-Za-z_][A-Za-z0-9_]*$"
+      max_length: 128
+
+  - name: BitPosition
+    keywords: ["Start Bit Position", "Start Bit", "起始位", "BitPosition"]
+    format: int
+    required: true
+    level: signal
+    validation:
+      min: 0
+      max: 63
+    conversion: "int()"
+
+  - name: BitSize
+    keywords: ["Signal Length", "Bit Length", "信号长度", "BitSize", "Length", "位长度"]
+    format: int
+    required: true
+    default: 8
+    level: signal
+    validation:
+      min: 1
+      max: 64
+    conversion: "int()"
+
+  - name: SignalLength
+    keywords: ["Signal Length", "SignalLength"]
+    format: int
+    required: false
+    level: signal
+    alias_of: BitSize
+
+  - name: SignalType
+    keywords: ["Signal Type", "Data Type", "数据类型"]
+    format: string
+    required: false
+    level: signal
+
+  - name: SignalEndianness
+    keywords: ["Byte Order", "字节序", "Endianness"]
+    format: enum
+    required: false
+    level: signal
+
+  - name: SignalInitValue
+    keywords: ["Init Value", "Initial Value", "初始值"]
+    format: number
+    required: false
+    level: signal
+
+  - name: SignalMinValue
+    keywords: ["Signal Min Value (phys)", "Min Value", "最小值", "Minimum"]
+    format: number
+    required: false
+    level: signal
+    conversion: "float()"
+
+  - name: SignalMaxValue
+    keywords: ["Signal Max Value (phys)", "Max Value", "最大值", "Maximum"]
+    format: number
+    required: false
+    level: signal
+    conversion: "float()"
+
+  - name: SignalDefaultValue
+    keywords: ["Default Value (hex)", "Default Value", "默认值", "Init Value"]
+    format: hex
+    required: false
+    default: "0x00"
+    level: signal
+    conversion: "parse_hex"
+
+  - name: TimeoutValue
+    keywords: ["Timeout Value (hex)", "Timeout Value", "超时值"]
+    format: hex
+    required: false
+    level: signal
+    conversion: "parse_hex"
+
+  - name: SignalDataInvalidValue
+    keywords: ["Invalid Value", "无效值"]
+    format: hex
+    required: false
+    level: signal
+
+  - name: SignalValueDescription
+    keywords: ["Signal Value Description", "Value Description", "值描述"]
+    format: string
+    required: false
+    level: signal
+
+  - name: Remark
+    keywords: ["Remark", "备注", "Comment", "Description", "说明"]
+    format: string
+    required: false
+    level: signal
+
+# ─── 枚举映射 ───
+# 重要：为与原始解析结果保持一致，MsgSendType/FrameSendType 的值
+#       不做枚举标准化转换，保持 Excel 中的原始值。
+#       下面的映射表仅供 Agent 理解枚举含义时参考，不用于自动转换。
+#
+#       SignalEndianness 同理：保持原始值，不做自动转换。
+#       如果未来需要启用自动标准化，取消注释 normalize_on_extract 并改为 true。
+enum_mappings:
+  MsgSendType:
+    normalize_on_extract: false  # false = 保持 Excel 原始值，不做转换
+    # 以下仅为参考（原始值 → 含义说明），不用于自动转换
+    reference:
+      "Unconditional": "UF — 无条件帧"
+      "UF": "UF — 无条件帧"
+      "无条件": "UF — 无条件帧"
+      "Event": "ET — 事件触发帧"
+      "ET": "ET — 事件触发帧"
+      "事件": "ET — 事件触发帧"
+      "Sporadic": "SF — 偶发帧"
+      "SF": "SF — 偶发帧"
+      "偶发": "SF — 偶发帧"
+      "Diagnostic": "DF — 诊断帧"
+      "DF": "DF — 诊断帧"
+      "诊断": "DF — 诊断帧"
+  SignalEndianness:
+    normalize_on_extract: false  # false = 保持 Excel 原始值
+    reference:
+      "Intel": "LITTLE_ENDIAN — 小端序"
+      "Little": "LITTLE_ENDIAN — 小端序"
+      "Little Endian": "LITTLE_ENDIAN — 小端序"
+      "小端": "LITTLE_ENDIAN — 小端序"
+      "Motorola": "BIG_ENDIAN — 大端序"
+      "Big": "BIG_ENDIAN — 大端序"
+      "Big Endian": "BIG_ENDIAN — 大端序"
+      "大端": "BIG_ENDIAN — 大端序"
+
+# ─── 别名规则 ───
+alias_rules:
+  - primary: BitSize
+    alias: SignalLength
+  - primary: MsgSendType
+    alias: FrameSendType
+
+# ─── 分组配置 ───
+grouping:
+  group_by: ["FrameName"]
+  message_level_fields:
+    - EcuName
+    - FrameName
+    - LinId
+    - ProtectedId
+    - MsgSendType
+    - FrameLength
+    - FrameSendType
+    - FrameCycleTime
+  signal_collect_field: signals
+
+# ─── 方向判断 ───
+direction_config:
+  field: EcuName
+  tx_values: ["CCU", "CCURT1", "CCURT2"]
+  default: "RX"
+
+# ─── 数据校验规则 ───
+validation_rules:
+  - rule: "0x00 <= LinId <= 0x3F"
+    severity: error
+    message: "LIN ID 超出有效范围 (0x00~0x3F)"
+
+  - rule: "BitPosition < FrameLength * 8"
+    severity: error
+    message: "BitPosition 超出帧长度范围"
+
+  - rule: "BitPosition + BitSize <= FrameLength * 8"
+    severity: error
+    message: "信号溢出帧边界 (BitPosition + BitSize > FrameLength * 8)"
+
+  - rule: "1 <= FrameLength <= 8"
+    severity: error
+    message: "LIN 帧长度必须在 1~8 字节之间"
+
+# ─── 输出路径 ───
+output_schema:
+  root_path: "AUTOSAR.RequirementsData.CommunicationStack.Lin.LinSignal"
+  key_by: sheet_name
+  structure: "{sheet_name: {TX: [...messages], RX: [...messages]}}"

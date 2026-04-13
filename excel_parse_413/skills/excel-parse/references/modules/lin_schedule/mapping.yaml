@@ -1,0 +1,139 @@
+# LIN 调度表字段映射配置
+# 机器可解析的配置文件，供 Agent 运行时加载映射规则
+
+module: lin_schedule
+version: "2.0"
+description: "LIN 调度表解析配置 — 供 Agent 读取后自行执行解析流程"
+
+# ─── Sheet 识别规则 ───
+sheet_patterns:
+  include:
+    - "*调度*"
+    - "*Schedule*"
+    - "*schedule*"
+  exclude:
+    - "*Legend*"
+    - "*变更*"
+    - "*履历*"
+
+# ─── 调度表结构说明 ───
+# LIN 调度表的布局与常规信号表不同：
+#   - 信号表：标准的 "列=字段, 行=记录" 结构
+#   - 调度表：不规则的表格布局，帧名和时间分布在不同行/列
+#
+# 典型调度表布局示例：
+#
+#   行1:  (空)      | 15ms    | 15ms    | 15ms    | 15ms    | ...
+#   行2:  实际调度表 | CCU_LIN1_1 | RLS_1 | RLS_2  | RLS_3  | ...
+#   行3:  (空)      | 180ms   |         |         |         | ...
+#
+# 其中：
+#   - 帧名行：包含帧名称（如 CCU_LIN1_1、RLS_1），通常在第 2~3 行
+#   - 时间行：包含传输时间（如 15ms），通常在帧名行的上方或下方
+#   - 总耗时行：包含总时间（如 180ms），通常在最后
+#   - 可能有标签列（如 "实际调度表"）在最左侧
+
+# ─── 提取目标 ───
+# 从调度表中提取每个时隙的 帧名 + 传输时间
+parameters:
+  - name: frame_name
+    description: "帧名称，如 CCU_LIN1_1、RLS_1、Reserved"
+    format: string
+    required: true
+    identification_hints:
+      - "帧名通常是英文标识符，格式如 XXX_LINN_M（ECU名_LIN通道_序号）"
+      - "常见帧名前缀：CCU、RLS、SSM、SSMF、SSMR、SRM"
+      - "Reserved 表示保留时隙"
+      - "帧名不含数字后缀 ms、不含纯数字"
+
+  - name: tans_time
+    description: "传输时间/时隙耗时，如 15ms、10ms"
+    format: string
+    required: true
+    identification_hints:
+      - "时间值通常带有 ms 后缀"
+      - "常见值：5ms、10ms、15ms、20ms"
+      - "时间行通常与帧名行相邻（上方或下方）"
+      - "同一调度表中各时隙的时间可能相同也可能不同"
+
+  - name: total_time
+    description: "调度表总耗时，如 180ms"
+    format: string
+    required: false
+    identification_hints:
+      - "通常出现在调度表末尾或单独一行"
+      - "值通常远大于单个时隙时间"
+      - "可能标注为 '总耗时'、'Total' 等"
+
+# ─── 调度表布局模式 ───
+# Agent 应根据实际数据判断布局类型
+layout_patterns:
+  # 模式A：水平布局（最常见）
+  # 帧名在一行中水平排列，时间在相邻行
+  horizontal:
+    description: "帧名水平排列在一行，传输时间在上方或下方的相邻行"
+    example: |
+      行1:  (空)      | 15ms       | 15ms  | 15ms  | 15ms  | ...
+      行2:  实际调度表  | CCU_LIN1_1 | RLS_1 | RLS_2 | RLS_3 | ...
+      行3:  (空)      | 180ms      |       |       |       |
+
+  # 模式B：垂直布局（少见）
+  # 帧名在一列中垂直排列
+  vertical:
+    description: "帧名垂直排列在一列，传输时间在相邻列"
+    example: |
+      行1: 帧名         | 传输时间
+      行2: CCU_LIN1_1   | 15ms
+      行3: RLS_1         | 15ms
+      行4: RLS_2         | 15ms
+
+# ─── 输出格式 ───
+# 每个提取的条目包含以下字段
+output_fields:
+  - name: frame_name
+    description: "帧名称"
+    trace: true
+
+  - name: tans_time
+    description: "传输时间"
+    trace: true
+
+# 注：原系统还提取了行列位置信息（frame_row, frame_column 等），
+# 这些用于构建 Trace 溯源信息，在最终输出中会被转换为 Trace 信封格式
+
+# ─── 通道匹配规则 ───
+# 调度表需要与 LIN 信号表的通道关联
+channel_matching:
+  method: "frame_name_intersection"
+  description: |
+    通过比较调度表中的帧名集合与各信号 sheet 的帧名集合的交集率来匹配通道。
+    intersection_rate = len(schedule_frame_names ∩ signal_frame_names) / len(signal_frame_names)
+    将调度表分配给交集率最高的信号通道。
+  min_rate: 0.0
+  tool: "match_by_intersection"
+
+# ─── Trace 信封格式 ───
+trace_format:
+  frame_name:
+    value: "<帧名>"
+    type: "user"
+    trace:
+      - file: "<Excel文件路径>"
+        sheet: "<调度表Sheet名>"
+        row: "<帧名所在行号>"
+        col: "<帧名所在列字母>"
+
+  tans_time:
+    value: "<传输时间>"
+    type: "user"
+    trace:
+      - file: "<Excel文件路径>"
+        sheet: "<调度表Sheet名>"
+        row: "<时间所在行号>"
+        col: "<时间所在列字母>"
+
+# ─── 输出路径 ───
+output_schema:
+  root_path: "AUTOSAR.RequirementsData.CommunicationStack.Lin.LinSchedule"
+  key_by: channel_name
+  structure: "{channel_name: {schedule_table_1: [{frame_name: {trace_envelope}, tans_time: {trace_envelope}}, ...]}}"
